@@ -18,6 +18,8 @@ const STORAGE_KEY_KART = "kart";
 
 // tableau d'objets ; 
 let cart = [];
+
+// création d'un objet / Panier
 let object= {};
 
 let quantity= document.getElementById('quantity');
@@ -25,7 +27,9 @@ let colors = document.getElementById('colors');
 let form=  document.getElementById('form');
 
 function onClickSubmitButton (e){
+    // Annulation de la soumission du form
     e.preventDefault(); 
+    // création de l'objet du produit de la page que l'on stocke dans le tableau d'objet que l'on stockera dans le localStorage
     object = {id : id ,
         colors : colors.value,
       quantity : quantity.value};
