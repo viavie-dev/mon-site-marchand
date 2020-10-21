@@ -1,5 +1,6 @@
-export function getProducts() {
-    return new Promise((resolve, reject) => {
-        
-    });
-}
+import {} from './product.js';
+
+// correspondance prix id
+//if(){
+//   let price;
+//}

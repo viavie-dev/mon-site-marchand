@@ -1,5 +1,6 @@
 const url = "http://localhost:3000/api/teddies";
 
+// function pour connaitre la taille d'un objet
 function ObjectSize(obj) {
     let size = 0, key;
     for (key in obj) {
@@ -17,6 +18,7 @@ export function getAllTeddyBear() {
     })
    }
 
+// Affichage des cartes représentant tous les produits   
 export function createCard(data){
     for (let i=0; i <ObjectSize(data); i++){   
       let price = parseInt(data[i].price);
@@ -28,6 +30,8 @@ export function createCard(data){
 
 export function getOneTeddyBear(id){
     return new Promise((resolve, reject) => {
+
+        //Création d'une chaine de requete : url + / + id
         fetch(url+'/'+id)
             .then(response => response.json()) 
             
@@ -39,14 +43,37 @@ export function getOneTeddyBear(id){
 
 }
 
+// Affichage d'un produit
 export function displayOneTB (product){
     let price = parseInt(product.price);
     price = price / 100;
     price = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price); 
 
-    let matchesColors= [{'rgb(152,118,84)': "Pale brown", '':"white"}];
-    document.getElementById("teddy").insertAdjacentHTML('beforeend', '<div class="card col-6"><img src="'+ product.imageUrl + ' " alt="nounours" style="width: 100%;"></div><div class="card col-6"><h1>'+product.name+'</h1><h3>Couleurs : '+product.colors+'</h3><h2>'+price+'</h2><p>'+product.description+'</p><form action="" method="GET"><select name="quantity" id="quantity"><option value="1">1</option><option value="1">2</option><option value="1">3</option><option value="1">4</option><option value="1">5</option><option value="1">6</option><option value="1">7</option><option value="1">8</option><option value="1">9</option><option value="1">10</option></select></form><a href="panier.html" class="btn btn-primary" style="width: 140px">Panier</a></div>');
+    let colors =[];
+    colors = product.colors;
+    let color= colors.join(', '); 
+
+   
+    for(let i=0; i<colors.length; i++){
+        document.getElementById("colors").insertAdjacentHTML('beforeend', ` <option value="${colors[i]}">${colors[i]}</option>` );
+    }  
+       
+    //let matchesColors= [{'rgb(152,118,84)': "Pale brown", '':"white"}];
+
+    document.getElementById("teddy").insertAdjacentHTML('beforebegin', '<div class="card col-6"><img src="'+ product.imageUrl + ' " alt="nounours" style="width: 100%;"></div><div class="card col-6"><h1>'+product.name+'</h1><h3>Couleurs : ' + color + '</h3><h2>'+price+'</h2><p>'+product.description+'</p></div>');
 
 }
 
+export const STORAGE = {
 
+    save: (key, value) => {
+        const jsonData = JSON.stringify(value);
+        window.localStorage.setItem(key, jsonData);
+    },
+
+    load: key => {
+        const jsonData = localStorage.getItem(key);
+        return JSON.parse(jsonData);
+    }
+
+};
