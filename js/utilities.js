@@ -36,7 +36,7 @@ export function getOneTeddyBear(id){
             .then(response => response.json()) 
             
             .then(function(response){ 
-                console.log(response);
+                //console.log(response);
                 resolve(response)})
             .catch(reject);
     })
