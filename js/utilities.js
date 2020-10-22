@@ -25,7 +25,8 @@ export function createCard(data){
       let price = parseInt(data[i].price);
       price = price / 100;
       price = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price); 
-      document.getElementById("cardContainer").insertAdjacentHTML('beforeend', '<div class="card col-6 p-1 mb-2" style="width: 18rem;"> <img src=" '+ data[i].imageUrl + '" class="card-img-top" style="height: 400px"alt="..."> <div class="card-body">  <h5 class="card-title">'+ data[i].name  + '</h5> <p class="card-text">' + price + ' euros</p><a href="teddyBear.html?id='+data[i]._id +'" class="btn btn-primary mr-2">En savoir plus</a><a href="#" class="btn btn-primary">Panier</a></div>'
+      document.getElementById("cardContainer").insertAdjacentHTML('beforeend', `
+      <div class="card col-6 p-1 mb-2" style="width: 18rem;"> <img src=" `+ data[i].imageUrl + `" class="card-img-top" style="height: 400px"alt="..."> <div class="card-body"><h5 class="card-title">`+ data[i].name  + `</h5> <p class="card-text">` + price + ` euros</p><a href="teddyBear.html?id=`+data[i]._id +`" class="btn btn-primary mr-2">En savoir plus</a><a href="#" class="btn btn-primary">Panier</a></div>`
       )}
 }
 
@@ -95,3 +96,4 @@ export function loadCart(key){
         return cart;   
    }
 }
+
