@@ -1,5 +1,6 @@
 import { loadCart } from './utilities.js';
 import { getOneTeddyBear } from './utilities.js';
+import { onDeleteButton} from './utilities.js';
 
 const STORAGE_KEY_CART = "cart";
 let cart = loadCart(STORAGE_KEY_CART);
@@ -29,14 +30,17 @@ for (let i = 0 ; i< cart.length ; i++){
         
              //On va générer le code html pour chaque objet parcouru dans la boucle.
         document.getElementById("cart").insertAdjacentHTML('beforeend',`
-        <tr>
+        <tr id="${product._id}+${cartColors}">
         <td><img src="${product.imageUrl}" alt="nounours" style="width: 150px;"></td>
         <td>${product.name}</td>
         <td>${cartColors}</td>
         <td>${cartQuantity}</td>
         <td>${price}</td>
+        <td><button class="delete"type="button" data-id="${product._id}+${cartColors}">Supprimer</button></td>
         </tr>
         `);
-
+        document.querySelector(`[data-id="${product._id}+${cartColors}"]`).addEventListener('click', onDeleteButton);
+        
 })
 }
+

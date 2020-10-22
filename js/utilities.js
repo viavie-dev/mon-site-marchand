@@ -97,3 +97,25 @@ export function loadCart(key){
    }
 }
 
+export function onDeleteButton(e){
+let cart = loadCart(STORAGE_KEY_CART);
+let data= e.target.dataset.id;
+let dataTab = data.split('+');
+//console.log(dataTab);
+console.log(cart);
+for(let index=0; index<cart.length; index++){
+console.log(dataTab[1], cart[index].colors)
+if(   dataTab[0]==cart[index].id && dataTab[1]== cart[index].colors)
+{
+document.getElementById(`${cart[index].id}+${cart[index].colors}`).remove();
+cart= cart.splice(index, 1);
+
+}
+
+}
+console.log(cart);
+}
+
+
+
+
