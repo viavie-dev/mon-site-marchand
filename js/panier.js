@@ -1,4 +1,4 @@
-import {} from './product.js';
+import { loadCart } from './utilities.js';
 
 // correspondance prix id
 //if(){

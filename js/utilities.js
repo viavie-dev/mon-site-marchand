@@ -1,5 +1,6 @@
 const url = "http://localhost:3000/api/teddies";
-
+let cart;
+const STORAGE_KEY_CART = "cart";
 // function pour connaitre la taille d'un objet
 function ObjectSize(obj) {
     let size = 0, key;
@@ -77,3 +78,20 @@ export const STORAGE = {
     }
 
 };
+
+// persister le panier ; fonction qui stocke les données du panier et sera récupéré sur la page panier
+export function saveCart(cart) {
+    STORAGE.save(STORAGE_KEY_CART, cart);
+
+}
+
+export function loadCart(key){
+   let cart = STORAGE.load(key)
+   if ( cart !== null){
+       return cart;
+   }else {
+       //On initialise un tableau vide qui sera le panier.
+        cart = [];   
+        return cart;   
+   }
+}

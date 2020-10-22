@@ -1,26 +1,25 @@
 import { getOneTeddyBear } from './utilities.js';
 import { displayOneTB } from './utilities.js';
-import { STORAGE } from './utilities.js';
+import { saveCart } from './utilities.js';
+import { loadCart } from './utilities.js';
 
 /*   AFFICHAGE */
 
 // récupération de la page courante
 let urlJson = new URL(window.location);
+
 // Récupération de l'id qui est dans la chaine de requête de l'url
 let id = urlJson.searchParams.get("id");
-//console.log(id);
-
-let cart = [];
 
 // récupération des datas  lié à l'id de l'objet
 getOneTeddyBear(id).then(function (product) { displayOneTB(product) });
 
 /*   REALISATION DU PANIER DE PRODUIT : stockage des datas*/
 
-const STORAGE_KEY_KART = "cart";
-
+const STORAGE_KEY_CART = "cart";
+let cart = [];
 let form = document.getElementById('form');
-
+console.log(form);
 function onClickSubmitButton(e) {
 
     // Annulation de la soumission du form
@@ -34,6 +33,7 @@ function onClickSubmitButton(e) {
         quantity: document.getElementById('quantity').value
     };
     let control = true;
+  
     //  on partcourt notre tableau d'objet
     for (let j = 0; j < cart.length; j++) {
 
@@ -50,14 +50,12 @@ function onClickSubmitButton(e) {
         cart.push(object);
     }
 
-    console.log(cart);
-
+    // stockage du dernier tableau cart qui représente le panier (chaque stockage écrase le précédent mais le tableau cart s'indente)
+    saveCart(cart);
+   
 }
+
+
+cart =loadCart(STORAGE_KEY_CART);
+
 form.addEventListener('submit', onClickSubmitButton);
-
-
-// persister le panier
-export function dataStorage() {
-
-
-}
