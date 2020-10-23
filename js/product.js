@@ -30,7 +30,8 @@ function onClickSubmitButton(e) {
     let object = {
         id: id,
         colors: document.getElementById('colors').value,
-        quantity: document.getElementById('quantity').value
+        quantity: document.getElementById('quantity').value,
+        price: document.getElementById('price').value
     };
     let control = true;
   

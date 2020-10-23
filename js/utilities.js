@@ -65,7 +65,7 @@ export function displayOneTB(product) {
     //let matchesColors= [{'rgb(152,118,84)': "Pale brown", '':"white"}];
 
     document.getElementById("teddy").insertAdjacentHTML('beforebegin', '<div class="card col-6"><img src="' + product.imageUrl + ' " alt="nounours" style="width: 100%;"></div><div class="card col-6"><h1>' + product.name + '</h1><h3>Couleurs : ' + color + '</h3><h2>' + price + '</h2><p>' + product.description + '</p></div>');
-
+document.getElementById('price').value= product.price;
 }
 
 export const STORAGE = {
@@ -118,41 +118,67 @@ export function onDeleteButton(e) {
     }
     //console.log(cart);
 }
-export function adjustQuantity(adjustement, cartQuantity, e) {
-    
-        //On récupère en local storage le tableau contenant notre panier.
-        let cart = loadCart(STORAGE_KEY_CART);
-        //On cible les data-id de l'élément ciblé.
-        let data = e.currentTarget.dataset.id;
-        console.log(e.currentTarget);
-        //On récupère une chaîne de caractère qu'on va séparer et ranger dans un tableau ou le premier élément (l'id) sera a l'index 0 et le deuxième (les couleurs) a l'indice 1.
-        let dataTab = data.split('+');
-        //On va parcourir le tableau correspondant au tableau pour trouver l'entrée sélectionnée par l'utilisateur.
-        for (let index = 0; index < cart.length; index++) {
-            if (dataTab[0] == cart[index].id && dataTab[1] == cart[index].colors) {
+export function adjustQuantity(adjustement, cartQuantity, price, sum, e, allPrice) {
 
-                cartQuantity = cart[index].quantity;
-                //on transforme la variable en un chiffre manipulable.
-                cartQuantity = parseInt(cartQuantity);
-                // Si la quantité est supérieure ou égale a 0 et qu'on veux augmenter.
-                if (cartQuantity >= 0 && adjustement > 0) {
-                    //On incrèmente la valeur de la variable de quantité
-                    cartQuantity = cartQuantity + 1;
-                    //Dans le cas ou la quantité est supérieure a 1 et qu'on veux la réduire 
-                } else if (cartQuantity >= 2 && adjustement < 0) {
-                    //On réduit la valeur de 1.
-                    cartQuantity = cartQuantity - 1;
-                }
-                document.querySelector(`.quantity[data-id="${cart[index].id}+${cart[index].colors}"]`).innerHTML= cartQuantity ;
-                //On modifie la quantité dans le tableau lui même
-                cart[index].quantity = cartQuantity;
-                //On met le nouveau tableau avec une entrée en moins dans le local storage.
-                saveCart(cart);
-                console.log(cart);
+    //On récupère en local storage le tableau contenant notre panier.
+    let cart = loadCart(STORAGE_KEY_CART);
+    //On cible les data-id de l'élément ciblé.
+    let data = e.currentTarget.dataset.id;
+
+    //On récupère une chaîne de caractère qu'on va séparer et ranger dans un tableau ou le premier élément (l'id) sera a l'index 0 et le deuxième (les couleurs) a l'indice 1.
+    let dataTab = data.split('+');
+
+   
+    //On va parcourir le tableau correspondant au tableau pour trouver l'entrée sélectionnée par l'utilisateur.
+    for (let index = 0; index < cart.length; index++) {
+        if (dataTab[0] == cart[index].id && dataTab[1] == cart[index].colors) {
+
+            cartQuantity = cart[index].quantity;
+            //on transforme la variable en un chiffre manipulable.
+            cartQuantity = parseInt(cartQuantity);
+            // Si la quantité est supérieure ou égale a 0 et qu'on veux augmenter.
+            if (cartQuantity >= 0 && adjustement > 0) {
+                //On incrèmente la valeur de la variable de quantité
+                cartQuantity = cartQuantity + 1;
+                //Dans le cas ou la quantité est supérieure a 1 et qu'on veux la réduire 
+            } 
+            if (cartQuantity >= 2 && adjustement < 0) {
+                //On réduit la valeur de 1.
+                cartQuantity = cartQuantity - 1;
             }
-           
+
+            let prices = price * parseInt(cartQuantity);
+            //Le prix étant exprimé en centimes on va le mettre en un format plus lisible.
+            prices = prices / 100;
+            prices = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(prices);
             
+            document.querySelector(`.quantity[data-id="${cart[index].id}+${cart[index].colors}"]`).innerHTML = cartQuantity;
+           
+            document.querySelector(`.price[data-id="${cart[index].id}+${cart[index].colors}"]`).innerHTML = prices;
+            //On modifie la quantité dans le tableau lui même
+            cart[index].quantity = cartQuantity;
+            //On met le nouveau tableau avec une entrée en moins dans le local storage.
+            
+            let total =totalCommande(cart, cartQuantity);
+          
+            
+            document.getElementById('totalCommande').innerHTML = `total de la commande : ${total} euros`;
+            saveCart(cart);
         }
+
+
     }
+}
 
+function totalCommande(cart){
+let total=0;
 
+for (let index=0; index< cart.length; index++){
+total += cart[index].price * cart[index].quantity;
+}
+return total;
+}
+
+function diviserParCent(){
+
+}
