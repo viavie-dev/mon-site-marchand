@@ -1,7 +1,7 @@
 import { loadCart } from './utilities.js';
 import { getOneTeddyBear } from './utilities.js';
 import { onDeleteButton} from './utilities.js';
-
+import { adjustQuantity} from './utilities.js';
 const STORAGE_KEY_CART = "cart";
 let cart = loadCart(STORAGE_KEY_CART);
 
@@ -34,12 +34,18 @@ for (let i = 0 ; i< cart.length ; i++){
         <td><img src="${product.imageUrl}" alt="nounours" style="width: 150px;"></td>
         <td>${product.name}</td>
         <td>${cartColors}</td>
-        <td>${cartQuantity}</td>
+        <td ><button data-id="${product._id}+${cartColors}" class="decrease"><i class="fas fa-minus"></i></button><div data-id="${product._id}+${cartColors}" class="quantity" >${cartQuantity}</div><button data-id="${product._id}+${cartColors}" class ="increase"><i  class="fas fa-plus"></i></button></td>
         <td>${price}</td>
-        <td><button class="delete"type="button" data-id="${product._id}+${cartColors}">Supprimer</button></td>
+        <td><button class="delete" type="button" data-id="${product._id}+${cartColors}">Supprimer</button></td>
         </tr>
         `);
-        document.querySelector(`[data-id="${product._id}+${cartColors}"]`).addEventListener('click', onDeleteButton);
+
+        
+        document.querySelector(`.delete[data-id="${product._id}+${cartColors}"]`).addEventListener('click', onDeleteButton);
+        
+        document.querySelector(`.decrease[data-id="${product._id}+${cartColors}"]`).addEventListener('click', function (e){adjustQuantity(-1, cartQuantity, e)});
+        document.querySelector(`.increase[data-id="${product._id}+${cartColors}"]`).addEventListener('click', function(e){adjustQuantity(1,cartQuantity, e)});
+       
         
 })
 }
