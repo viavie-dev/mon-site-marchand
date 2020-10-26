@@ -108,7 +108,8 @@ export function onDeleteButton(e) {
     let cart = loadCart(STORAGE_KEY_CART);
     let data = e.target.dataset.id;
     let dataTab = data.split('+');
-   
+    let totalQ=0;
+    let  cartQuantity=0;
     for (let index = 0; index < cart.length; index++) {
      
         if (dataTab[0] == cart[index].id && dataTab[1] == cart[index].colors) {
@@ -117,11 +118,16 @@ export function onDeleteButton(e) {
                                   
             saveCart(cart);
         }
+    cartQuantity = cart[index].quantity;
+    totalQ += Number(cartQuantity);
+    document.getElementById('allQuantity').innerHTML = `${totalQ}`;
+
         let total = totalCommande(cart);
             total = displayPriceEuros(total);
 
             document.getElementById('totalCommande').innerHTML = `${total}`;
     }
+    
 }
 
 export function adjustQuantity(adjustement, cartQuantity, price, e, allPrice) {
