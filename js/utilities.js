@@ -1,6 +1,8 @@
+//La constante qui permet l'accés au fichier Json de l'API
 const url = "http://localhost:3000/api/teddies";
 let cart;
 const STORAGE_KEY_CART = "cart";
+
 // function pour connaitre la taille d'un objet
 function ObjectSize(obj) {
     let size = 0, key;
@@ -10,6 +12,7 @@ function ObjectSize(obj) {
     return size;
 };
 
+// Affichage de l'ensemble des nounours
 export function getAllTeddyBear() {
     return new Promise((resolve, reject) => {
         fetch(url)
@@ -55,7 +58,6 @@ export function displayOneTB(product) {
     let price = parseInt(product.price);
     price = displayPriceEuros(price);
 
-
     let colors = [];
     colors = product.colors;
     let color = colors.join(', ');
@@ -92,6 +94,7 @@ export function saveCart(cart) {
 
 }
 
+//une fonction qui si le panier est vide, initialise le panier, et sinon le récupère dans le local storage.
 export function loadCart(key) {
     let cart = STORAGE.load(key)
     if (cart !== null) {
@@ -103,34 +106,43 @@ export function loadCart(key) {
     }
 }
 
+//Fonction qui permet de supprimer un objet du tableau et du local storage lorsqu'on clique sur le bouton supprimer
 export function onDeleteButton(e) {
 
     let cart = loadCart(STORAGE_KEY_CART);
     let data = e.target.dataset.id;
     let dataTab = data.split('+');
-    let totalQ=0;
-    let  cartQuantity=0;
-    for (let index = 0; index < cart.length; index++) {
-     
-        if (dataTab[0] == cart[index].id && dataTab[1] == cart[index].colors) {
-            document.getElementById(`${cart[index].id}+${cart[index].colors}`).remove();
-            let outOfCart = cart.splice(index, 1);
-                                  
+    let totalQ = 0;
+    let cartQuantity = 0;
+
+    for (let i = 0; i < cart.length; i++) {
+
+        if (dataTab[0] == cart[i].id && dataTab[1] == cart[i].colors) {
+            document.getElementById(`${cart[i].id}+${cart[i].colors}`).remove();
+            let outOfCart = cart.splice(i, 1);
             saveCart(cart);
+            let quantities =quantitiesItemsInBasket(cart);
+
+            document.getElementById('items').innerHTML = `(${quantities})`;
+
         }
-    cartQuantity = cart[index].quantity;
-    totalQ += Number(cartQuantity);
-    document.getElementById('allQuantity').innerHTML = `${totalQ}`;
+
+        // récupération de la propriété quantity de l'objet 
+        cartQuantity = cart[i].quantity;
+        totalQ += Number(cartQuantity);
+        document.getElementById('allQuantity').innerHTML = `${totalQ}`;
 
         let total = totalCommande(cart);
-            total = displayPriceEuros(total);
+        total = displayPriceEuros(total);
 
-            document.getElementById('totalCommande').innerHTML = `${total}`;
+        document.getElementById('totalCommande').innerHTML = `${total}`;
+
     }
-    
+
+   
 }
 
-export function adjustQuantity(adjustement, cartQuantity, price, e, allPrice) {
+export function adjustQuantity(adjustement, cartQuantity, price, e) {
 
     //On récupère en local storage le tableau contenant notre panier.
     let cart = loadCart(STORAGE_KEY_CART);
@@ -140,28 +152,31 @@ export function adjustQuantity(adjustement, cartQuantity, price, e, allPrice) {
 
     //On récupère une chaîne de caractère qu'on va séparer et ranger dans un tableau ou le premier élément (l'id) sera a l'index 0 et le deuxième (les couleurs) a l'indice 1.
     let dataTab = data.split('+');
-    
-    let totalQ=0;
+
+    let totalQ = 0;
 
     //On va parcourir le tableau correspondant au tableau pour trouver l'entrée sélectionnée par l'utilisateur.
     for (let index = 0; index < cart.length; index++) {
+
         if (dataTab[0] == cart[index].id && dataTab[1] == cart[index].colors) {
 
             cartQuantity = cart[index].quantity;
             //on transforme la variable en un chiffre manipulable.
             cartQuantity = parseInt(cartQuantity);
+
             // Si la quantité est supérieure ou égale a 0 et qu'on veux augmenter.
             if (cartQuantity >= 0 && adjustement > 0) {
                 //On incrèmente la valeur de la variable de quantité
                 cartQuantity = cartQuantity + 1;
-                saveCart(cart);
+
                 //Dans le cas ou la quantité est supérieure a 1 et qu'on veux la réduire 
             }
             if (cartQuantity >= 2 && adjustement < 0) {
                 //On réduit la valeur de 1.
                 cartQuantity = cartQuantity - 1;
-                saveCart(cart);
             }
+            cart[index].quantity = cartQuantity;
+
 
             let prices = price * parseInt(cartQuantity);
 
@@ -172,25 +187,18 @@ export function adjustQuantity(adjustement, cartQuantity, price, e, allPrice) {
 
             document.querySelector(`.price[data-id="${cart[index].id}+${cart[index].colors}"]`).innerHTML = prices;
 
-            //On modifie la quantité dans le tableau lui même
-            cart[index].quantity = cartQuantity;
-           
-            
             let total = totalCommande(cart);
             total = displayPriceEuros(total);
 
             document.getElementById('totalCommande').innerHTML = `${total}`;
-           
-            //let totalQuantity= totalQuantity(cart);
-            //console.log(totalQuantity);
+
             saveCart(cart);
         }
-        cartQuantity = cart[index].quantity;
-        totalQ += cartQuantity;
-            document.getElementById('allQuantity').innerHTML = `${totalQ}`;
-
-
+        totalQ += cart[index].quantity;
+        console.log(totalQ);
+        document.getElementById('allQuantity').innerHTML = `${totalQ}`;
     }
+
 }
 
 function totalCommande(cart) {
@@ -202,13 +210,13 @@ function totalCommande(cart) {
     return total;
 }
 
-function totalQuantity(cart){
-    let allQuantity=0;
- 
+function totalQuantity(cart) {
+    let allQuantity = 0;
+
     for (let index = 0; index < cart.length; index++) {
         allQuantity += Number(cart[index].quantity);
     }
-  return allQuantity;
+    return allQuantity;
 
 }
 
@@ -220,21 +228,28 @@ export function displayPriceEuros(price) {
     return price;
 }
 
+export function quantitiesItemsInBasket(cart) {
+ let quantities = cart.length;
+return quantities
+
+}
+/*
 // key du local storage key = cart ici
-export function quantityItemsInBasket(key, selector){
+export function quantityItemsInBasket(key, selector) {
 
     if (localStorage.getItem(key)) {
 
         let listProducts = JSON.parse(localStorage.getItem(key));
         if (listProducts.length > 0) {
-          let compteur = 0;
+            let compteur = 0;
 
-          // listProducts.length c'est le nombre d'objet
-          for (let i = 0; i < listProducts.length; i++) {
-            compteur += Number(listProducts[i].quantity);
-          }
-          selector.innerHTML = `${compteur}`;
+            // listProducts.length c'est le nombre d'objet
+            for (let i = 0; i < listProducts.length; i++) {
+                compteur += Number(listProducts[i].quantity);
+            }
+            selector.innerHTML = `${compteur}`;
         }
-      }
+    }
 
 }
+*/

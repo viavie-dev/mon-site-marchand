@@ -3,6 +3,8 @@ import { displayOneTB } from './utilities.js';
 import { saveCart } from './utilities.js';
 import { loadCart } from './utilities.js';
 
+ 
+
 /*   AFFICHAGE */
 
 // récupération de la page courante
@@ -17,9 +19,9 @@ getOneTeddyBear(id).then(function (product) { displayOneTB(product) });
 /*   REALISATION DU PANIER DE PRODUIT : stockage des datas*/
 
 const STORAGE_KEY_CART = "cart";
-let cart = [];
+let  cart = loadCart( STORAGE_KEY_CART);;
 let form = document.getElementById('form');
-console.log(form);
+
 function onClickSubmitButton(e) {
 
     // Annulation de la soumission du form
@@ -60,3 +62,5 @@ function onClickSubmitButton(e) {
 cart =loadCart(STORAGE_KEY_CART);
 
 form.addEventListener('submit', onClickSubmitButton);
+
+
