@@ -193,10 +193,12 @@ export function adjustQuantity(adjustement, cartQuantity, price, e) {
             document.getElementById('totalCommande').innerHTML = `${total}`;
 
             saveCart(cart);
+           
         }
         totalQ += cart[index].quantity;
         console.log(totalQ);
         document.getElementById('allQuantity').innerHTML = `${totalQ}`;
+        
     }
 
 }
@@ -230,7 +232,7 @@ export function displayPriceEuros(price) {
 
 export function quantitiesItemsInBasket(cart) {
  let quantities = cart.length;
-return quantities
+return quantities;
 
 }
 /*

@@ -2,7 +2,7 @@ import { getOneTeddyBear } from './utilities.js';
 import { displayOneTB } from './utilities.js';
 import { saveCart } from './utilities.js';
 import { loadCart } from './utilities.js';
-
+import { quantitiesItemsInBasket } from './utilities.js';
  
 
 /*   AFFICHAGE */
@@ -55,12 +55,17 @@ function onClickSubmitButton(e) {
 
     // stockage du dernier tableau cart qui représente le panier (chaque stockage écrase le précédent mais le tableau cart s'indente)
     saveCart(cart);
-   
+    let quantities =quantitiesItemsInBasket(cart);
+console.log(quantities);
+    document.getElementById('items').innerHTML = `(${quantities})`;
+    
 }
 
 
 cart =loadCart(STORAGE_KEY_CART);
 
 form.addEventListener('submit', onClickSubmitButton);
+
+
 
 
